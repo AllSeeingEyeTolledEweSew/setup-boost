@@ -1,0 +1,48 @@
+name: set up boost
+description: Ensures boost is available
+
+inputs:
+  version:
+    description: Exact version to install (example: 1.75.0)
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Locate a suitable BOOST_ROOT
+      id: boost-root
+      shell: bash
+      run: |
+        if [ "${{ runner.os }}" == Windows ]
+        then
+          echo "::set-output name=path::C:\\boost_${INPUT_VERSION//./_}"
+        elif [ "${{ runner.os }}" == macOS ]
+        then
+          echo "::set-output name=path::/usr/local/share/boost_${INPUT_VERSION//./_}"
+        else
+          echo "::set-output name=path::/usr/local/share/boost_${INPUT_VERSION//./_}"
+        fi
+
+    - name: Update environment variables
+      shell: bash
+      run: |
+        echo "::set-env name=BOOST_ROOT::${{ steps.boost-root.outputs.path }}"
+        echo "::set-env name=BOOST_BUILD_PATH::${{ steps.boost-root.outputs.path }}/tools/build"
+        echo "::add-path::${{ steps.boost-root.outputs.path }}"
+
+    - name: Load boost from cache
+      id: cache
+      uses: actions/cache@v2
+      with:
+        key: boost-${{ inputs.version }}-${{ runner.os }}
+        path: ${{ steps.boost-root.outputs.path }}
+
+    - name: Download and install boost
+      shell: shell
+      run: |
+        if [ "${{ steps.cache.outputs.cache-hit }}" == true ]
+        then
+          echo "::debug::Cache hit, skipping install"
+        else
+          ${{ github.action_path }}/setup_boost.sh "${{ inputs.version }}" "${{ steps.boost-root.outputs.path }}"
+        fi
