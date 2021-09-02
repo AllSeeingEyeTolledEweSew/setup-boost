@@ -15,12 +15,12 @@ runs:
       run: |
         if [ "${{ runner.os }}" == Windows ]
         then
-          echo "::set-output name=path::C:\\boost_${INPUT_VERSION//./_}"
+          echo "::set-output name=path::C:\\.boost\\${{ inputs.version }}"
         elif [ "${{ runner.os }}" == macOS ]
         then
-          echo "::set-output name=path::/usr/local/share/boost_${INPUT_VERSION//./_}"
+          echo "::set-output name=path::${HOME}/.boost/${{ inputs.version }}"
         else
-          echo "::set-output name=path::/usr/local/share/boost_${INPUT_VERSION//./_}"
+          echo "::set-output name=path::${HOME}/.boost/${{ inputs.version }}"
         fi
 
     - name: Update environment variables
