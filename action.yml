@@ -26,9 +26,9 @@ runs:
     - name: Update environment variables
       shell: bash
       run: |
-        echo "::set-env name=BOOST_ROOT::${{ steps.boost-root.outputs.path }}"
-        echo "::set-env name=BOOST_BUILD_PATH::${{ steps.boost-root.outputs.path }}/tools/build"
-        echo "::add-path::${{ steps.boost-root.outputs.path }}"
+        echo "BOOST_ROOT=${{ steps.boost-root.outputs.path }}" >> $GITHUB_ENV
+        echo "BOOST_BUILD_PATH=${{ steps.boost-root.outputs.path }}/tools/build" >> $GITHUB_ENV
+        echo "${{ steps.boost-root.outputs.path }}" >> $GITHUB_PATH
 
     - name: Load boost from cache
       id: cache
