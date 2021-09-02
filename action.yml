@@ -48,5 +48,5 @@ runs:
         then
           echo "::debug::Cache hit, skipping install"
         else
-          "${{ github.action_path }}/setup_boost.sh" "${{ inputs.version }}" "${{ steps.boost-root.outputs.path }}"
+          . '${{ github.action_path }}/setup_boost.sh' "${{ inputs.version }}" '${{ steps.boost-root.outputs.path }}'
         fi
