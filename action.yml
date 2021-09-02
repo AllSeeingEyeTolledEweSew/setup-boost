@@ -38,7 +38,7 @@ runs:
         path: ${{ steps.boost-root.outputs.path }}
 
     - name: Download and install boost
-      shell: shell
+      shell: bash
       run: |
         if [ "${{ steps.cache.outputs.cache-hit }}" == true ]
         then
