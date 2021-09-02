@@ -3,7 +3,7 @@ description: Ensures boost is available
 
 inputs:
   version:
-    description: Exact version to install (example: 1.75.0)
+    description: 'Exact version to install (example: 1.75.0)'
     required: true
 
 runs:
