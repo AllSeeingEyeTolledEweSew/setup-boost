@@ -5,6 +5,9 @@ inputs:
   version:
     description: 'Exact version to install (example: 1.75.0)'
     required: true
+  cache-key:
+    description: 'Cache key for boost installation (empty for no cache)'
+    default: ''
 
 runs:
   using: composite
@@ -32,9 +35,10 @@ runs:
 
     - name: Load boost from cache
       id: cache
+      if: inputs.cache-key != ''
       uses: actions/cache@v2
       with:
-        key: boost-${{ inputs.version }}-${{ runner.os }}
+        key: ${{ inputs.cache-key }}
         path: ${{ steps.boost-root.outputs.path }}
 
     - name: Download and install boost
@@ -44,5 +48,5 @@ runs:
         then
           echo "::debug::Cache hit, skipping install"
         else
-          ${{ github.action_path }}/setup_boost.sh "${{ inputs.version }}" "${{ steps.boost-root.outputs.path }}"
+          "${{ github.action_path }}/setup_boost.sh" "${{ inputs.version }}" "${{ steps.boost-root.outputs.path }}"
         fi
